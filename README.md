@@ -56,7 +56,7 @@ Here's how a basic playbook using this role could look like.
 ```
 
 > [!NOTE]
-> If you are using Ansible Vault/setting custom variables, make sure the variables are named differently. (for example, don't call your hostname variable "bluesky_pds_hostname")
+> If you are using Ansible Vault/setting custom variables, make sure the variables are named differently. For example, don't call your hostname variable "bluesky_pds_hostname".
 > Doing so might cause a recursion error.
 
 ### Web server
