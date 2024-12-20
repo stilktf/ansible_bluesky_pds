@@ -53,6 +53,10 @@ Here's how a basic playbook using this role could look like.
            bluesky_pds_plc_rotation_key: changeme # PLC rotation key. Again, generate the secret using "openssl ecparam --name secp256k1 --genkey --noout --outform DER | tail --bytes=+8 | head --bytes=32 | xxd --plain --cols 32". Ansible Vault is useful for keeping secrets secure.
 ```
 
+> [!NOTE]
+> If you are using Ansible Vault/setting custom variables, make sure the variables are named differently. (for example, don't call your hostname variable "bluesky_pds_hostname")
+> Doing so might cause a recursion error.
+
 ### Web server
 This assumes you're using the Caddy web server.
 
