@@ -21,6 +21,8 @@ Role Variables
 | bluesky_pds_port | The port that the Bluesky PDS container will be forwarded to. By default, this is 3000, which should work in most cases, but if you have another service running on this port, you should specify another port. | No |
 | bluesky_pds_hostname | The domain the PDS is being run on. If you are running the PDS server on ``example.com``, you would set this variable to ``example.com``. | Yes |
 | bluesky_pds_admin_password | The admin password the PDS will use. I highly recommend using something like [Ansible Vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html) to encrypt the admin password inside your playbook. | Yes |
+| bluesky_pds_secret | Secret used for generating JWTs. You can generate it using the command ``openssl rand --hex 16``. Ansible Vault is recommended. | Yes |
+| bluesky_pds_plc_rotation_key | Key for rotating some encryption stuff. You can generate it using the command ``openssl ecparam --name secp256k1 --genkey --noout --outform DER \| tail --bytes=+8 \| head --bytes=32 \| xxd --plain --cols 32``. Ansible Vault is recommended. | Yes |
 | bluesky_pds_upload_limit | Upload limit for files. This is in bytes. The default is 52428800 bytes (around 52 MB) | No |
 | bluesky_pds_plc_url | What PLC directory to use. The default is enough in most usecases. | No |
 | bluesky_pds_app_view_url | Bluesky API url. The default is enough in most usecases. | No |
@@ -28,7 +30,7 @@ Role Variables
 | bluesky_pds_report_service_url | The server that reports should be sent to. The default is enough in most usecases. | No |
 | bluesky_pds_report_service_did | Same as above, but in DID format. The default is enough in most usecases. | No |
 | bluesky_pds_crawlers | What relay instance to use. The default is "bsky.network", which is enough in most usecases. | No |
-| bluesky_pds_watchtower_enabled | If you don't want to include [Watchtower](https://containrrr.dev/watchtower/), a service that automatically updates Docker container upgrades in the Compose file, set this to false. This is enabled by default. | No |
+| bluesky_pds_watchtower_enabled | If you don't want to include [Watchtower](https://containrrr.dev/watchtower/), a service that automatically updates Docker container upgrades in the Compose file, set this to `` false``. This is enabled by default. | No |
 
 Example Deployment
 ----------------
