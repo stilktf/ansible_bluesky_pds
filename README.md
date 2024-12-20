@@ -33,6 +33,12 @@ Role Variables
 Example Deployment
 ----------------
 
+### Install the role
+You can use Ansible Galaxy to easily install the role.
+```
+ansible-galaxy role install stilktf.ansible_bluesky_pds
+```
+
 ### Playbook
 Here's how a basic playbook using this role could look like.
 
