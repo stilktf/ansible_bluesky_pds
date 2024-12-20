@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  pds:
+    container_name: pds
+    image: ghcr.io/bluesky-social/pds:{{ bluesky_pds_version }}
+    ports:
+      - "{{ bluesky_pds_port }}:3000"
+    restart: unless-stopped
+    volumes:
+      - "{{ bluesky_pds_folder }}/pds:/pds"
+    env_file:
+      - "{{ bluesky_pds_folder}}/pds.env"
+{% if bluesky_pds_watchtower_enabled | bool %}
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    network_mode: host
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_SCHEDULE: "@midnight"
+{% endif %}

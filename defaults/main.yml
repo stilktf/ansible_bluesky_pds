@@ -1,0 +1,17 @@
+---
+# defaults file for bluesky_pds
+bluesky_pds_version: 0.4 # Version of the Docker image to use
+bluesky_pds_folder: /pds # Where the files for the PDS will be stored on the host computer. Overriding this may cause problems with other scripts.
+bluesky_pds_port: 3000 # The port that the PDS will be forwarded to
+bluesky_pds_secret: changeme # PDS secret (must be generated and changed by the config.. I recommend you use Ansible Vault for this.)
+bluesky_pds_plc_rotation_key: changeme # PLC rotation key (must be generated and changed... I recommend you use Ansible Vault for this)
+bluesky_pds_hostname: changeme.xyz # What domain the PDS will run on
+bluesky_pds_admin_password: changeme1234 # The admin password. Should... no, MUST be changed.
+bluesky_pds_upload_limit: 52428800 # Upload limit (in bytes I think)
+bluesky_pds_plc_url: https://plc.directory # Default should be fine for most cases
+bluesky_pds_app_view_url: https://api.bsky.app # +1
+bluesky_pds_app_view_did: did:web:api.bsky.app # +1
+bluesky_pds_report_service_url: "https://mod.bsky.app" # +1
+bluesky_pds_report_service_did: "did:plc:ar7c4by46qjdydhdevvrndac" # +1
+bluesky_pds_crawlers: "https://bsky.network" # +1
+bluesky_pds_watchtower_enabled: true # Should the Compose file include Watchtower, a service that automatically updates Docker containers for you?

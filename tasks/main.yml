@@ -1,0 +1,76 @@
+- name: Check if Docker Compose is installed on the system
+  ansible.builtin.command: docker compose version
+  register: docker_compose_valid
+  changed_when: docker_compose_valid.rc != 0
+
+- name: Make Compose directory
+  ansible.builtin.file:
+    path: "{{ bluesky_pds_folder }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy over Compose file
+  ansible.builtin.template:
+    src: files/compose.yaml.j2
+    dest: "{{ bluesky_pds_folder }}/compose.yaml"
+    mode: '0755'
+
+- name: Check if env file already exists
+  ansible.builtin.stat:
+    path: "{{ bluesky_pds_folder }}/pds.env"
+  register: env_file
+
+- name: Check if password default value was changed
+  ansible.builtin.assert:
+    that: bluesky_pds_admin_password != "changeme1234"
+    fail_msg: "Please change the default admin password. It is incredibly insecure. Change the variable \"bluesky_pds_admin_password\" when using this role."
+    success_msg: "Default password has been changed to something else. Good!"
+
+- name: Check if default hostname value was changed
+  ansible.builtin.assert:
+    that: bluesky_pds_hostname != "changeme.xyz"
+    fail_msg: >-
+     Please change the default hostname. Change the variable "bluesky_pds_hostname" when using this role.
+    success_msg: "Default hostname has been changed to something else. Good!"
+
+- name: Check if PDS secret was changed
+  ansible.builtin.assert:
+    that: bluesky_pds_secret != "changeme"
+    fail_msg: >-
+      Please set the bluesky_pds_secret variable. You can use the command "openssl rand --hex 16" to generate a secret.
+    success_msg: "PDS secret variable has been changed. Good!"
+
+- name: Check if PLC rotation key was changed
+  ansible.builtin.assert:
+    that: bluesky_pds_plc_rotation_key != "changeme"
+    fail_msg: >- # ansible-lint doesn't like long lines so I wrote this message with that in mind. I could ignore it but whatever
+      Please set the bluesky_pds_plc_rotation_key variable.
+      You can use the command below to generate a secret for this.
+      openssl ecparam --name secp256k1 --genkey --noout --outform DER | tail --bytes=+8 | head --bytes=32 | xxd --plain --cols 32
+    success_msg: "PLC rotation key variable has been changed. Good!"
+
+- name: Copy over .env file
+  ansible.builtin.template:
+    src: files/pds.env.j2
+    dest: "{{ bluesky_pds_folder }}/pds.env"
+    mode: '0755'
+
+- name: Start Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ bluesky_pds_folder }}"
+  register: output
+
+- name: Show results
+  ansible.builtin.debug:
+    var: output
+
+- name: Get pdsadmin script
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/bluesky-social/pds/refs/heads/main/pdsadmin.sh
+    dest: /usr/local/bin/pdsadmin
+    mode: '0755'
+
+- name: Make pdsadmin script executable
+  ansible.builtin.file:
+    dest: /usr/local/bin/pdsadmin
+    mode: a+x

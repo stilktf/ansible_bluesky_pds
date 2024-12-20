@@ -1,0 +1,10 @@
+---
+- name: Test the role!
+  hosts: localhost
+  remote_user: root
+  become: true
+  roles:
+    - role: bluesky_pds
+      bluesky_pds_port: 8492
+      bluesky_pds_hostname: somethingdifferentblablabla.com
+      bluesky_pds_admin_password: testpassword2
